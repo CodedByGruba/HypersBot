@@ -1,8 +1,14 @@
 package de.codedbygruba;
 
 
+import de.codedbygruba.listeners.MessageListener;
+import de.codedbygruba.utils.ConfigManager;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+
+import java.util.EnumSet;
 
 
 /**
@@ -12,10 +18,18 @@ import net.dv8tion.jda.api.entities.Activity;
 public class HypersBot {
     public static void main(String[] args) {
         try {
-            JDABuilder.createDefault(ConfigManager.getToken())
+            JDA jda = JDABuilder.createDefault(ConfigManager.getToken(),
+                    EnumSet.of(
+                            GatewayIntent.GUILD_MESSAGES,
+                            GatewayIntent.MESSAGE_CONTENT,
+                            GatewayIntent.GUILD_MEMBERS
+                    ))
                     .setActivity(Activity.playing("Hyper Hyper"))
+                    .addEventListeners(new MessageListener())
                     .build();
-        } catch (RuntimeException e) {
+            jda.awaitReady();
+            jda.updateCommands().addCommands(MessageListener.getCommands()).queue();
+        } catch (RuntimeException | InterruptedException e) {
             e.printStackTrace();
         }
     }
