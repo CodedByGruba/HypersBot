@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ConfigManager {
+public class SecretManager {
     private static JsonNode config;
 
     static {
         try {
-            InputStream inputStream = ConfigManager.class.getClassLoader().getResourceAsStream("userSecrets.json");
+            InputStream inputStream = SecretManager.class.getClassLoader().getResourceAsStream("userSecrets.json");
             if (inputStream == null) {
                 throw new IOException("userSecrets.json not found!");
             }
@@ -27,4 +27,5 @@ public class ConfigManager {
     public static String getToken() {
         return config.get("token").asText();
     }
+    public static String getGoogleSheetURL() { return config.get("googleSheetURL").asText(); }
 }

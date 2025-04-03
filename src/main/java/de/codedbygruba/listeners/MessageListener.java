@@ -22,7 +22,9 @@ public class MessageListener extends ListenerAdapter {
     public static List<CommandData> getCommands() {
         return List.of(
                 Commands.slash("add", "Füge einen Spieler zur Farmliste hinzu")
-                        .addOption(OptionType.STRING, "name", "Teleportierter Spieler", true)
+                        .addOption(OptionType.STRING, "player", "Teleportierter Spieler", true)
+                        .addOption(OptionType.STRING, "guardian", "Farm Wächter", true)
+                        .addOption(OptionType.STRING, "second", "Second Account", false)
         );
     }
 }
