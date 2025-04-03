@@ -2,7 +2,7 @@ package de.codedbygruba;
 
 
 import de.codedbygruba.listeners.MessageListener;
-import de.codedbygruba.utils.ConfigManager;
+import de.codedbygruba.utils.SecretManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -18,7 +18,7 @@ import java.util.EnumSet;
 public class HypersBot {
     public static void main(String[] args) {
         try {
-            JDA jda = JDABuilder.createDefault(ConfigManager.getToken(),
+            JDA jda = JDABuilder.createDefault(SecretManager.getToken(),
                     EnumSet.of(
                             GatewayIntent.GUILD_MESSAGES,
                             GatewayIntent.MESSAGE_CONTENT,
