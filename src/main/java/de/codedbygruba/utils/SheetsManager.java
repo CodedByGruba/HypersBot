@@ -19,9 +19,9 @@ public class SheetsManager {
             connection.setDoOutput(true);
 
             String jsonInputString = String.format("{\"teleportedPlayer\":\"%s\", \"farmGuardian\":\"%s\", \"secondAccount\":\"%s\"}",
-                    teleportedPlayer.getAsString(),
-                    farmGuardian.getAsString(),
-                    secondAccount == null ? " " : secondAccount.getAsString()
+                    teleportedPlayer.getAsString().toLowerCase(),
+                    farmGuardian.getAsString().toLowerCase(),
+                    secondAccount == null ? " " : secondAccount.getAsString().toLowerCase()
             );
 
             try (OutputStream os = connection.getOutputStream()) {
