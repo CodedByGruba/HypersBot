@@ -2,3 +2,4 @@
 /target/
 .idea/misc.xml
 src/main/resources/userSecrets.json
+src/main/resources/userSecrets.Development.json

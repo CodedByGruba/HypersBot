@@ -1,6 +1,7 @@
 package de.codedbygruba.listeners;
 
 import de.codedbygruba.commands.AddCommand;
+import de.codedbygruba.commands.AddSecondCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -13,9 +14,14 @@ import java.util.List;
 public class MessageListener extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        event.deferReply().queue();
+
         switch (event.getName()) {
             case "add":
                 new AddCommand().execute(event);
+                break;
+            case "addsecond":
+                new AddSecondCommand().execute(event);
                 break;
         }
     }
@@ -24,7 +30,10 @@ public class MessageListener extends ListenerAdapter {
                 Commands.slash("add", "Füge einen Spieler zur Farmliste hinzu")
                         .addOption(OptionType.STRING, "player", "Teleportierter Spieler", true)
                         .addOption(OptionType.STRING, "guardian", "Farm Wächter", true)
-                        .addOption(OptionType.STRING, "second", "Second Account", false)
+                        .addOption(OptionType.STRING, "second", "Second Account", false),
+                Commands.slash("addsecond", "Füge einen Second zu einem Bereits eingetragenen Spieler hinzu")
+                        .addOption(OptionType.STRING, "player", "Eingetragener Main Account", true)
+                        .addOption(OptionType.STRING, "second", "Second Account", true)
         );
     }
 }

@@ -2,14 +2,41 @@ package de.codedbygruba.utils;
 
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-import javax.swing.text.html.Option;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class SheetsManager {
-    public static int addPlayerToSheet(OptionMapping teleportedPlayer, OptionMapping farmGuardian, OptionMapping secondAccount) {
+    private static SheetsManager INSTANCE;
+
+    public static SheetsManager getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new SheetsManager();
+        }
+        return INSTANCE;
+    }
+
+    public int addPlayerToSheet(OptionMapping teleportedPlayer, OptionMapping farmGuardian, OptionMapping secondAccount) {
+        String jsonInputString = String.format("{\"teleportedPlayer\":\"%s\", \"farmGuardian\":\"%s\", \"secondAccount\":\"%s\", \"commandType\":\"%s\"}",
+                teleportedPlayer.getAsString().toLowerCase(),
+                farmGuardian.getAsString().toLowerCase(),
+                secondAccount == null ? " " : secondAccount.getAsString().toLowerCase(),
+                "ADD"
+        );
+        return sendPostRequest(jsonInputString);
+    }
+
+    public int addSecondPlayerToSheet(OptionMapping player, OptionMapping secondAccount) {
+        String jsonInputString = String.format("{\"player\":\"%s\", \"secondAccount\":\"%s\", \"commandType\":\"%s\"}",
+                player.getAsString().toLowerCase(),
+                secondAccount.getAsString().toLowerCase(),
+                "ADD_SECOND"
+        );
+        return sendPostRequest(jsonInputString);
+    }
+
+    private int sendPostRequest(String jsonInputString) {
         try {
             URL url = new URL(SecretManager.getGoogleSheetURL());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -18,11 +45,6 @@ public class SheetsManager {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
-            String jsonInputString = String.format("{\"teleportedPlayer\":\"%s\", \"farmGuardian\":\"%s\", \"secondAccount\":\"%s\"}",
-                    teleportedPlayer.getAsString().toLowerCase(),
-                    farmGuardian.getAsString().toLowerCase(),
-                    secondAccount == null ? " " : secondAccount.getAsString().toLowerCase()
-            );
 
             try (OutputStream os = connection.getOutputStream()) {
                 byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
