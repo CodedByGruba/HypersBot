@@ -2,16 +2,17 @@ package de.codedbygruba.commands;
 
 
 import de.codedbygruba.HypersBot;
+import de.codedbygruba.utils.PermissionManager;
 import de.codedbygruba.utils.SheetsManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class AddSecondCommand {
-    private final HypersBot bot = HypersBot.getInstance();
+    private final PermissionManager permissionManager = PermissionManager.getInstance();
     private final SheetsManager sheetsManager = SheetsManager.getInstance();
 
     public void execute(SlashCommandInteractionEvent event) {
         if (event.getMember().getRoles().stream()
-                .noneMatch(role -> bot.allowedRoles.contains(role.getId()))) {
+                .noneMatch(role -> permissionManager.allowedRoles.contains(role.getId()))) {
             event.getHook().sendMessage("❌ Du hast nicht die Berechtigung, diesen Befehl zu benutzen!").setEphemeral(true).queue();
             return;
         }
