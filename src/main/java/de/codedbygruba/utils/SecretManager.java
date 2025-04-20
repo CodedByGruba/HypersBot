@@ -28,4 +28,5 @@ public class SecretManager {
         return config.get("token").asText();
     }
     public static String getGoogleSheetURL() { return config.get("googleSheetURL").asText(); }
+    public static String getGoogleSheetBackupURL() { return config.get("googleSheetBackupURL").asText(); }
 }
