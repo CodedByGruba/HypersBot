@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import java.util.EnumSet;
-import java.util.List;
 
 /**
  * @author CodedByGruba

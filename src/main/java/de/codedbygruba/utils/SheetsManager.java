@@ -6,9 +6,12 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class SheetsManager {
     private static SheetsManager INSTANCE;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
     public static SheetsManager getInstance() {
         if (INSTANCE == null) {
@@ -18,13 +21,16 @@ public class SheetsManager {
     }
 
     public int addPlayerToSheet(OptionMapping teleportedPlayer, OptionMapping farmGuardian, OptionMapping secondAccount) {
-        String jsonInputString = String.format("{\"teleportedPlayer\":\"%s\", \"farmGuardian\":\"%s\", \"secondAccount\":\"%s\", \"commandType\":\"%s\"}",
+        String jsonInputString = String.format("{\"teleportedPlayer\":\"%s\", \"farmGuardian\":\"%s\", \"secondAccount\":\"%s\", \"commandType\":\"%s\", \"timeStamp\":\"%s\"}",
                 teleportedPlayer.getAsString().toLowerCase(),
                 farmGuardian.getAsString().toLowerCase(),
                 secondAccount == null ? " " : secondAccount.getAsString().toLowerCase(),
-                "ADD"
+                "ADD",
+                LocalDateTime.now().format(formatter)
         );
-        return sendPostRequest(jsonInputString);
+        System.out.println("Backup response:");
+        sendPostRequest(SecretManager.getGoogleSheetBackupURL(), jsonInputString);
+        return sendPostRequest(SecretManager.getGoogleSheetURL() ,jsonInputString);
     }
 
     public int addSecondPlayerToSheet(OptionMapping player, OptionMapping secondAccount) {
@@ -33,12 +39,12 @@ public class SheetsManager {
                 secondAccount.getAsString().toLowerCase(),
                 "ADD_SECOND"
         );
-        return sendPostRequest(jsonInputString);
+        return sendPostRequest(SecretManager.getGoogleSheetURL() ,jsonInputString);
     }
 
-    private int sendPostRequest(String jsonInputString) {
+    private int sendPostRequest(String urlString ,String jsonInputString) {
         try {
-            URL url = new URL(SecretManager.getGoogleSheetURL());
+            URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod("POST");
