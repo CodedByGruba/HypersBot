@@ -1,6 +1,5 @@
 package de.codedbygruba.commands;
 
-import de.codedbygruba.HypersBot;
 import de.codedbygruba.utils.PermissionManager;
 import de.codedbygruba.utils.SheetsManager;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -21,7 +20,12 @@ public class AddCommand {
         var secondAccount = event.getOption("second");
 
         int responseCode = sheetsManager.addPlayerToSheet(teleportedPlayer, farmGuardian, secondAccount);
-        if (responseCode == 200) event.getHook().sendMessage(String.format("✅ Spieler `%s` wurde zur Farmliste hinzugefügt!", teleportedPlayer.getAsString())).queue();
+        if (responseCode == 200) {
+            event.getHook().sendMessage(secondAccount == null ?
+                    String.format("✅ Spieler `%s` wurde zur Farmliste hinzugefügt!", teleportedPlayer.getAsString()) :
+                    String.format("✅ Spieler `%s` + `%s` (Second) wurde zur Farmliste hinzugefügt!", teleportedPlayer.getAsString(),  secondAccount.getAsString())
+            ).queue();
+        }
         else event.getHook().sendMessage(String.format("❌ Da ist was schief gelaufen! `%d´",  responseCode)).queue();
     }
 }
