@@ -1,5 +1,6 @@
 package de.codedbygruba.listeners;
 
+import com.google.inject.Inject;
 import de.codedbygruba.commands.AddCommand;
 import de.codedbygruba.commands.AddSecondCommand;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -12,19 +13,25 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class MessageListener extends ListenerAdapter {
+    @Inject
+    private AddCommand addCommand;
+    @Inject
+    private AddSecondCommand addSecondCommand;
+
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         event.deferReply().queue();
 
         switch (event.getName()) {
             case "add":
-                new AddCommand().execute(event);
+                addCommand.execute(event);
                 break;
             case "addsecond":
-                new AddSecondCommand().execute(event);
+                addSecondCommand.execute(event);
                 break;
         }
     }
+
     public static List<CommandData> getCommands() {
         return List.of(
                 Commands.slash("add", "Füge einen Spieler zur Farmliste hinzu")

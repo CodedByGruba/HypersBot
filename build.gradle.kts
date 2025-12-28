@@ -13,14 +13,17 @@ plugins {
 
 repositories {
     mavenLocal()
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
+    mavenCentral()
 }
 
 dependencies {
-    api(libs.net.dv8tion.jda)
-    api(libs.com.fasterxml.jackson.core.jackson.databind)
+    implementation(libs.net.dv8tion.jda)
+    implementation(libs.com.fasterxml.jackson.core.jackson.databind)
+    implementation(libs.com.google.inject.guice)
+    implementation(libs.com.google.code.gson)
+
+    compileOnly(libs.org.projectlombok.lombok)
+    annotationProcessor(libs.org.projectlombok.lombok)
 }
 
 group = "de.codedbygruba"
