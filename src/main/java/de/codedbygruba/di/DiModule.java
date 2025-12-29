@@ -5,6 +5,8 @@ import de.codedbygruba.commands.AddCommand;
 import de.codedbygruba.commands.AddSecondCommand;
 import de.codedbygruba.listeners.MessageListener;
 import de.codedbygruba.models.Secrets;
+import de.codedbygruba.repositories.FarmBuildRepository;
+import de.codedbygruba.repositories.implementation.FarmBuildRepositoryImpl;
 import de.codedbygruba.services.ApiService;
 import de.codedbygruba.services.FarmBuildService;
 import de.codedbygruba.services.SheetsService;
@@ -26,7 +28,9 @@ public class DiModule extends AbstractModule {
 
         bind(ApiService.class).to(ApiServiceImpl.class);
         bind(SheetsService.class).to(SheetsServiceImpl.class);
-        bind(FarmBuildService.class).to(FarmBuildServiceImpl.class).asEagerSingleton();
+        bind(FarmBuildService.class).to(FarmBuildServiceImpl.class);
+
+        bind(FarmBuildRepository.class).to(FarmBuildRepositoryImpl.class).asEagerSingleton();
 
         bind(AddCommand.class);
         bind(AddSecondCommand.class);
