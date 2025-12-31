@@ -2,14 +2,14 @@ package de.codedbygruba.commands;
 
 import com.google.inject.Inject;
 import de.codedbygruba.models.Secrets;
-import de.codedbygruba.services.FarmBuildService;
+import de.codedbygruba.services.FarmService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class StopFarmBuildCommand {
     @Inject
     private Secrets secrets;
     @Inject
-    private FarmBuildService farmBuildService;
+    private FarmService farmService;
 
     public void execute(SlashCommandInteractionEvent event) {
         if (event.getMember().getRoles().stream()
@@ -18,7 +18,7 @@ public class StopFarmBuildCommand {
             return;
         }
 
-        var result = farmBuildService.stopFarmBuild();
+        var result = farmService.stopFarmBuild();
 
         if (result != null)
             event.getHook().sendMessage(String.format("✅ Der Farmbau ist abgeschlossen. Verbrauchte Zeit: %s", result)).queue();

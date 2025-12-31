@@ -13,8 +13,8 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
 
 /**
@@ -26,7 +26,11 @@ public class HypersBot {
 
     public static void main(String[] args) {
         try {
-            FileReader reader = new FileReader("secrets.json");
+            InputStream is = HypersBot.class
+                    .getClassLoader()
+                    .getResourceAsStream("secrets.Development.json");
+            assert is != null;
+            Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
             Secrets secret = gson.fromJson(reader, Secrets.class);
             Injector injector = Guice.createInjector(new DiModule(secret));
 
@@ -41,7 +45,7 @@ public class HypersBot {
                     .build();
             jda.awaitReady();
             jda.updateCommands().addCommands(MessageListener.getCommands()).queue();
-        } catch (RuntimeException | InterruptedException | IOException e) {
+        } catch (RuntimeException | InterruptedException e) {
             e.printStackTrace();
         }
     }

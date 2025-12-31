@@ -5,13 +5,13 @@ import de.codedbygruba.commands.AddCommand;
 import de.codedbygruba.commands.AddSecondCommand;
 import de.codedbygruba.listeners.MessageListener;
 import de.codedbygruba.models.Secrets;
-import de.codedbygruba.repositories.FarmBuildRepository;
-import de.codedbygruba.repositories.implementation.FarmBuildRepositoryImpl;
+import de.codedbygruba.repositories.FarmRepository;
+import de.codedbygruba.repositories.implementation.FarmRepositoryImpl;
 import de.codedbygruba.services.ApiService;
-import de.codedbygruba.services.FarmBuildService;
+import de.codedbygruba.services.FarmService;
 import de.codedbygruba.services.SheetsService;
 import de.codedbygruba.services.implementation.ApiServiceImpl;
-import de.codedbygruba.services.implementation.FarmBuildServiceImpl;
+import de.codedbygruba.services.implementation.FarmServiceImpl;
 import de.codedbygruba.services.implementation.SheetsServiceImpl;
 
 public class DiModule extends AbstractModule {
@@ -28,9 +28,9 @@ public class DiModule extends AbstractModule {
 
         bind(ApiService.class).to(ApiServiceImpl.class);
         bind(SheetsService.class).to(SheetsServiceImpl.class);
-        bind(FarmBuildService.class).to(FarmBuildServiceImpl.class);
+        bind(FarmService.class).to(FarmServiceImpl.class);
 
-        bind(FarmBuildRepository.class).to(FarmBuildRepositoryImpl.class).asEagerSingleton();
+        bind(FarmRepository.class).to(FarmRepositoryImpl.class).asEagerSingleton();
 
         bind(AddCommand.class);
         bind(AddSecondCommand.class);

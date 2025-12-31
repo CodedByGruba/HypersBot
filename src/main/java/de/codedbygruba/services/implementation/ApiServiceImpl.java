@@ -2,6 +2,7 @@ package de.codedbygruba.services.implementation;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import de.codedbygruba.adapter.LocalDateTimeAdapter;
 import de.codedbygruba.models.ApiResult;
 import de.codedbygruba.services.ApiService;
 
@@ -10,6 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 
 public class ApiServiceImpl implements ApiService {
@@ -17,7 +19,10 @@ public class ApiServiceImpl implements ApiService {
     private final HttpClient client;
 
     public ApiServiceImpl() {
-        gson = new GsonBuilder().setPrettyPrinting().create();
+        gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .setPrettyPrinting()
+                .create();
         client = HttpClient.newBuilder().build();
     }
 

@@ -7,7 +7,7 @@ import de.codedbygruba.models.Secrets;
 import de.codedbygruba.models.dtos.FarmEntryDto;
 import de.codedbygruba.models.dtos.SecondAccountEntryDto;
 import de.codedbygruba.services.ApiService;
-import de.codedbygruba.services.FarmBuildService;
+import de.codedbygruba.services.FarmService;
 import de.codedbygruba.services.SheetsService;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -21,7 +21,7 @@ public class SheetsServiceImpl implements SheetsService {
     @Inject
     private ApiService apiService;
     @Inject
-    private FarmBuildService farmBuildService;
+    private FarmService farmService;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
@@ -32,12 +32,15 @@ public class SheetsServiceImpl implements SheetsService {
                 teleportedPlayer.getAsString().toLowerCase(),
                 farmGuardian.getAsString(),
                 secondAccount == null ? " " : secondAccount.getAsString().toLowerCase(),
-                farmBuildService.getFarmStatus() == FarmStatus.BUILD ? HelpStatus.BUILDING : HelpStatus.NONE,
+                farmService.getFarmStatus() == FarmStatus.BUILD ? HelpStatus.BUILDING : HelpStatus.NONE,
                 LocalDateTime.now()
                 );
 
-        apiService.sendPostRequest(secrets.getGoogleSheetBackupUrl(), Void.class, farmEntryDto);
-        var response = apiService.sendPostRequest(secrets.getGoogleSheetUrl(), Void.class, farmEntryDto);
+        farmService.addPlayer(farmEntryDto);
+
+//        apiService.sendPostRequest(secrets.getGoogleSheetBackupUrl(), FarmEntryDto.class, farmEntryDto);
+        var response = apiService.sendPostRequest(secrets.getGoogleSheetUrl(), FarmEntryDto.class, farmEntryDto);
+
 
         try {
             return response.get().getResponseCode();
@@ -55,7 +58,7 @@ public class SheetsServiceImpl implements SheetsService {
                 secondAccount.getAsString().toLowerCase()
         );
 
-        var response = apiService.sendPostRequest(secrets.getGoogleSheetUrl(), Void.class, secondAccountEntryDto);
+        var response = apiService.sendPostRequest(secrets.getGoogleSheetUrl(), FarmEntryDto.class, secondAccountEntryDto);
 
         try {
             return response.get().getResponseCode();

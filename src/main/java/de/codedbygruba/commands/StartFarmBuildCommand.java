@@ -2,14 +2,14 @@ package de.codedbygruba.commands;
 
 import com.google.inject.Inject;
 import de.codedbygruba.models.Secrets;
-import de.codedbygruba.services.FarmBuildService;
+import de.codedbygruba.services.FarmService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class StartFarmBuildCommand {
     @Inject
     private Secrets secrets;
     @Inject
-    private FarmBuildService farmBuildService;
+    private FarmService farmService;
 
     public void execute(SlashCommandInteractionEvent event) {
         if (event.getMember().getRoles().stream()
@@ -18,7 +18,14 @@ public class StartFarmBuildCommand {
             return;
         }
 
-        var result = farmBuildService.startFarmBuild();
+        var result = farmService.startFarmBuild();
+
+        if (result.getDuration() == null) {
+            event.getHook().sendMessage("❌ Letzte Woche gab es keinen Farm Bau ._.").queue();
+        } else {
+            event.getHook().sendMessage(String.format("✅ Hier die Stats des letzten Farm Baus: \nVerbauchte Zeit: %s \nSpieler auf der Farm: %d \nSpieler die mitgeholfen haben: %d ",
+                    result.getDuration(), result.getPlayers(), result.getBuilders())).queue();
+        }
 
         if (result != null)
             event.getHook().sendMessage("✅ Der Farmbau hat begonnen!");
