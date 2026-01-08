@@ -3,10 +3,7 @@ package de.codedbygruba.repositories.implementation;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import de.codedbygruba.models.FarmBuild;
-import de.codedbygruba.models.FarmBuildStats;
-import de.codedbygruba.models.FarmStates;
-import de.codedbygruba.models.FarmStatus;
+import de.codedbygruba.models.*;
 import de.codedbygruba.models.dtos.FarmEntryDto;
 import de.codedbygruba.repositories.FarmRepository;
 import de.codedbygruba.adapter.LocalDateTimeAdapter;
@@ -21,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class FarmRepositoryImpl implements FarmRepository {
     private final Path farmBuildsPath = Paths.get("farmBuilds.json");
@@ -77,14 +75,16 @@ public class FarmRepositoryImpl implements FarmRepository {
     @Override
     public void stopFarmBuild() {
         addFarmBuild(getHighestId() + 1, new FarmBuild(
-                farmStates.getPlayers(),
+                farmStates.getPlayers()
+                        .stream()
+                        .filter(farmEntryDto -> farmEntryDto.getHelpStatus() == HelpStatus.BUILDING)
+                        .toList(),
                 farmStates.getStartFarmBuildTime(),
                 LocalDateTime.now())
         );
 
         farmStates.setFarmStatus(FarmStatus.READY);
         farmStates.setStartFarmBuildTime(null);
-        farmStates.setPlayers(new ArrayList<>());
         saveFarmStates();
     }
 
@@ -108,7 +108,6 @@ public class FarmRepositoryImpl implements FarmRepository {
             synchronized (farmBuilds) {
                 try (Writer writer = new FileWriter(farmBuildsPath.toFile())) {
                     gson.toJson(farmBuilds, writer);
-                    System.out.println("Saved farmBuilds.json");
                 } catch (IOException e) {
                     System.err.println(e.getMessage());
                 }
@@ -121,7 +120,6 @@ public class FarmRepositoryImpl implements FarmRepository {
             synchronized (farmStates) {
                 try (Writer writer = new FileWriter(farmStatesPath.toFile())) {
                     gson.toJson(farmStates, writer);
-                    System.out.println("Saved farmBuildStates.json");
                 } catch (IOException e) {
                     System.err.println(e.getMessage());
                 }

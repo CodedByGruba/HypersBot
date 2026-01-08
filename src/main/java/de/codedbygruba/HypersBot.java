@@ -28,7 +28,7 @@ public class HypersBot {
         try {
             InputStream is = HypersBot.class
                     .getClassLoader()
-                    .getResourceAsStream("secrets.Development.json");
+                    .getResourceAsStream("secrets.json");
             assert is != null;
             Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
             Secrets secret = gson.fromJson(reader, Secrets.class);

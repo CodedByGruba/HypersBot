@@ -13,6 +13,8 @@ public class AddSecondCommand {
     private SheetsService sheetsService;
 
     public void execute(SlashCommandInteractionEvent event) {
+        event.deferReply().queue();
+
         if (event.getMember().getRoles().stream()
                 .noneMatch(role -> secrets.getAllowedRoles().contains(role.getId()))) {
             event.getHook().sendMessage("❌ Du hast nicht die Berechtigung, diesen Befehl zu benutzen!").setEphemeral(true).queue();

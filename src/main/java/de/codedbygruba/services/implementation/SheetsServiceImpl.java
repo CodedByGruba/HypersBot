@@ -27,18 +27,17 @@ public class SheetsServiceImpl implements SheetsService {
 
 
     @Override
-    public int addPlayerToSheet(OptionMapping teleportedPlayer, OptionMapping farmGuardian, OptionMapping secondAccount) {
+    public int addPlayerToSheet(OptionMapping teleportedPlayer, OptionMapping farmGuardian, OptionMapping secondAccount, OptionMapping helped) {
         var farmEntryDto = new FarmEntryDto(
                 teleportedPlayer.getAsString().toLowerCase(),
                 farmGuardian.getAsString(),
                 secondAccount == null ? " " : secondAccount.getAsString().toLowerCase(),
-                farmService.getFarmStatus() == FarmStatus.BUILD ? HelpStatus.BUILDING : HelpStatus.NONE,
+                (farmService.getFarmStatus() == FarmStatus.BUILD && (helped == null || helped.getAsBoolean())) ? HelpStatus.BUILDING : HelpStatus.NONE,
                 LocalDateTime.now()
                 );
 
         farmService.addPlayer(farmEntryDto);
 
-//        apiService.sendPostRequest(secrets.getGoogleSheetBackupUrl(), FarmEntryDto.class, farmEntryDto);
         var response = apiService.sendPostRequest(secrets.getGoogleSheetUrl(), FarmEntryDto.class, farmEntryDto);
 
 
@@ -58,7 +57,7 @@ public class SheetsServiceImpl implements SheetsService {
                 secondAccount.getAsString().toLowerCase()
         );
 
-        var response = apiService.sendPostRequest(secrets.getGoogleSheetUrl(), FarmEntryDto.class, secondAccountEntryDto);
+        var response = apiService.sendPostRequest(secrets.getGoogleSheetUrl(), SecondAccountEntryDto.class, secondAccountEntryDto);
 
         try {
             return response.get().getResponseCode();

@@ -12,6 +12,8 @@ public class AddCommand {
     private SheetsService sheetsService;
 
     public void execute(SlashCommandInteractionEvent event) {
+        event.deferReply().queue();
+
         if (event.getMember().getRoles().stream()
                 .noneMatch(role -> secrets.getAllowedRoles().contains(role.getId()))) {
             event.getHook().sendMessage("❌ Du hast nicht die Berechtigung, diesen Befehl zu benutzen!").setEphemeral(true).queue();
@@ -21,8 +23,9 @@ public class AddCommand {
         var teleportedPlayer = event.getOption("player");
         var farmGuardian = event.getOption("guardian");
         var secondAccount = event.getOption("second");
+        var helped = event.getOption("helped");
 
-        int response = sheetsService.addPlayerToSheet(teleportedPlayer, farmGuardian, secondAccount);
+        int response = sheetsService.addPlayerToSheet(teleportedPlayer, farmGuardian, secondAccount, helped);
 
         if (response / 200 == 1) {
             event.getHook().sendMessage(secondAccount == null ?
