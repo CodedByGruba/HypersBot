@@ -1,5 +1,7 @@
 /.idea/
 /target/
 .idea/misc.xml
-src/main/resources/userSecrets.json
-src/main/resources/userSecrets.Development.json
+src/main/resources/secrets.json
+src/main/resources/secrets.Development.json
+/build/
+/.gradle/
